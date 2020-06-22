@@ -1,0 +1,25 @@
+{
+  "name": "nodeproject",
+  "version": "1.0.0",
+  "description": "Learning node with TCS",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cgallucci99/NodeProject.git"
+  },
+  "author": "Cam Gallucci",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cgallucci99/NodeProject/issues"
+  },
+  "homepage": "https://github.com/cgallucci99/NodeProject#readme",
+  "dependencies": {
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "fetch": "^1.1.0",
+    "node-fetch": "^2.6.0"
+  }
+}

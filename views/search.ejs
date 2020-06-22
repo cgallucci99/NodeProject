@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe search</title>
+    <style>
+        ul {
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <% for (var i = 0; i < results.length; i++) { %>
+            <li>
+                <img src="https://spoonacular.com/recipeImages/<%= results[i].image %>" alt="" height="100px">
+                <a href="<%= results[i].sourceUrl %>"></a><%= results[i].title %>
+            </li>
+        <% } %>
+    </ul>
+</body>
+</html>
