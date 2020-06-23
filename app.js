@@ -3,6 +3,10 @@ var express = require("express"),
 var app = express();
 app.set('view engine', 'ejs');
 
+app.get('/', (req, res) => {
+  res.render('index');
+})
+
 app.get("/search", function(req, res) {
     fetch('https://api.spoonacular.com/recipes/search?query='+req.query.search+'&number=5&apiKey=62db462a6cb442368aa7f2cb1af3a615')
     .then(response => response.json())
