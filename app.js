@@ -119,7 +119,11 @@ app.get('/profile', isAuthenticated, (req, res) => {
 })
 
 app.get('/login', function(req, res) {
-    res.render('login');
+    if (req.user) {
+        res.redirect('/profile')
+    } else {
+        res.render('login');
+    }
 });
 
 // Logout route

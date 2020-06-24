@@ -27,7 +27,7 @@
                 url: window.location.origin + '/api/getRecipe/' + recipeID,
                 method: 'GET'
             }).done(function(data) {
-                $('#recipes').append('<li>'+data.title+'</li>');
+                $('#recipes').append('<li>'+'<img src="'+ data.image +'" alt="" height="100px">'+data.title+'</li>');
             });
         }
     </script>
