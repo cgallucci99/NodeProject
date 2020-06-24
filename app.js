@@ -1,14 +1,14 @@
-var express = require("express"),
-    fetch = require('node-fetch'),
-    bodyParser = require('body-parser'),
-    fs = require('fs');
+var express     = require("express"),
+    fetch       = require('node-fetch'),
+    bodyParser  = require('body-parser'),
+    fs          = require('fs');
 var app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
     extended: true
   }));
 app.use(bodyParser.json());
-const config = JSON.parse(fs.readFileSync('./config.json', 'utf-8'))
+const config = JSON.parse(fs.readFileSync('./config.json', 'utf-8'));
 
 var pw = config.pw;
 const MongoClient = require('mongodb').MongoClient;
@@ -47,7 +47,23 @@ app.post("/addRecipe", function(req, res) {
         });
         client.close();
     });
-    //   res.send('sucess');
+})
+
+app.get('/:user', (req, res) => {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+        const collection = client.db("recipes").collection("recipes");
+        collection.findOne({user:req.params.user}, (err, foundUser) => {
+            if(err) {
+                console.log(err);
+                res.send('error')
+            } else {
+                console.log(foundUser);
+                res.send(foundUser);
+            }
+        });
+        client.close();
+    });
 })
 
 app.listen(3000, '0.0.0.0', function() {
