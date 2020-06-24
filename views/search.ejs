@@ -18,7 +18,6 @@
                 <a href="<%= results[i].sourceUrl %>"><%= results[i].title %></a>
                 <form action="/addRecipe" method="POST">
                     <input type="hidden" name="recipe" value="<%= results[i].id %>">
-                    <input type="text" name="user" placeholder="Enter your name">
                     <button type="submit">Add to personal recipes</button>
                 </form>
             </li>

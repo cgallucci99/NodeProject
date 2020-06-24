@@ -3,6 +3,7 @@ var express     = require("express"),
     bodyParser  = require('body-parser'),
     passport    = require('passport'),
     session     = require('express-session'),
+    mongo       = require('mongodb'),
     GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 require('dotenv').config();
 var app = express();
@@ -32,7 +33,7 @@ function isAuthenticated(req, res, next) {
 
 // connect db
 var pw = process.env.pw;
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = mongo.MongoClient;
 const uri = "mongodb+srv://admin:"+pw+"@recipes-rcffv.mongodb.net/recipes?retryWrites=true&w=majority";
 
 // Use the GoogleStrategy within Passport.
@@ -53,9 +54,10 @@ passport.use(new GoogleStrategy({
         if (user) {
             return done(null, user);
         } else {
-            collection.insertOne({ googleId: profile.id, name: profile.name })
+            collection.insertOne({ googleId: profile.id, name: profile.name, recipeIDs:new Array() })
             .then(u => {
-                return done (null, u);
+                console.log(u.ops[0]);
+                return done (null, u.ops[0]);
             })
         }
       }).then(() => {
@@ -92,44 +94,28 @@ app.get("/search", function(req, res) {
     });
 });
 
-app.post("/addRecipe", function(req, res) {
+app.post("/addRecipe", isAuthenticated, function(req, res) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
-        const collection = client.db("recipes").collection("recipes");
-        collection.insertOne({user:req.body.user, recipeID:req.body.recipe}, function (err, r) {
-            if (err) {
-                console.log(err)
-                res.send('fail');
-            }
-            else {
-                console.log(r.result.n);
-                res.send('success');
-            }
+        const collection = client.db("recipes").collection("users");
+        const userID = new mongo.ObjectID(req.user._id);
+        collection.findOneAndUpdate({_id:userID}, {$push: {recipeIDs:req.body.recipe}}, {returnOriginal: false}).then((r) => {
+                console.log(r.value);
+                req.logIn(r.value, err => {
+                    if (err) {return next(err);}
+                    return res.redirect('profile');
+                });
+        }).then(() => {
+            client.close();
+        }).catch(err => {
+            res.send('fail');
         });
-        client.close();
     });
 })
 
-app.get('/profile/', isAuthenticated, (req, res) => {
-    const client = new MongoClient(uri, { useNewUrlParser: true });
-    client.connect(err => {
-        const collection = client.db("recipes").collection("recipes");
-        collection.findOne({_id:req.user._id})
-        .then(user => {
-            res.render('profile', {user:req.user});
-        })
 
-        // collection.findOne({user:req.params.user}, (err, foundUser) => {
-        //     if(err) {
-        //         console.log(err);
-        //         res.send('error')
-        //     } else {
-        //         console.log(foundUser);
-        //         res.send(foundUser);
-        //     }
-        // });
-        // client.close();
-    });
+app.get('/profile', isAuthenticated, (req, res) => {
+    res.render('profile', {user:req.user});
 })
 
 app.get('/login', function(req, res) {
@@ -144,6 +130,16 @@ app.get('/logout', (req, res) => {
 
 
 // api routes
+app.get("/api/getRecipe/:recipeID", function(req, res) {
+    fetch('https://api.spoonacular.com/recipes/'+req.params.recipeID+'/information?apiKey=62db462a6cb442368aa7f2cb1af3a615')
+    .then(response => response.json())
+    .then(body => {
+        res.json(body);
+    })
+    .catch(err => {
+        res.json(err);
+    });
+})
 // GET /api/auth/google
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  The first step in Google authentication will involve
