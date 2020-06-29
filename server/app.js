@@ -4,7 +4,8 @@ var express     = require("express"),
     passport    = require('passport'),
     session     = require('express-session'),
     mongo       = require('mongodb'),
-    GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+    GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
+    cors = require('cors');
 require('dotenv').config();
 var app = express();
 app.set('view engine', 'ejs');
@@ -22,6 +23,11 @@ app.use(session({
   }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors({
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true
+}));
 
 function isAuthenticated(req, res, next) {
     if (req.user) {
@@ -43,7 +49,7 @@ const uri = "mongodb+srv://admin:"+pw+"@recipes-rcffv.mongodb.net/recipes?retryW
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/api/auth/google/callback"
+    callbackURL: "http://localhost:8000/api/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     const client = new MongoClient(uri,{poolSize: 10, bufferMaxEntries: 0, reconnectTries: 5000, useNewUrlParser: true,useUnifiedTopology: true});
@@ -129,7 +135,7 @@ app.get('/login', function(req, res) {
 // Logout route
 app.get('/logout', (req, res) => {
     req.logout(); 
-    res.redirect('/');
+    res.json({"message": "successfully logged out"});
 });
 
 
@@ -158,12 +164,12 @@ app.get('/api/auth/google',
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 app.get('/api/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/profile');
-  });
+  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login' }), function (req, res) {
+      res.redirect('http://localhost:3000/');
+  }
+  );
 
 // start server
-app.listen(3000, '0.0.0.0', function() {
-    console.log("listening on port 3000");
+app.listen(8000, '0.0.0.0', function() {
+    console.log("listening on port 8000");
 })
