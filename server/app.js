@@ -133,9 +133,9 @@ app.get('/login', function(req, res) {
 });
 
 // Logout route
-app.get('/logout', (req, res) => {
+app.get('/api/logout', (req, res) => {
     req.logout(); 
-    res.json({"message": "successfully logged out"});
+    res.json({message: "successfully logged out"});
 });
 
 
@@ -149,6 +149,16 @@ app.get("/api/getRecipe/:recipeID", function(req, res) {
     .catch(err => {
         res.json(err);
     });
+});
+
+app.get('/api/auth/login/success', function(req, res) {
+    if (req.user) {
+        res.json({
+            success: true,
+            message: "successfully authenticated user",
+            user: req.user,
+        });
+    }
 })
 // GET /api/auth/google
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -165,7 +175,7 @@ app.get('/api/auth/google',
 //   which, in this example, will redirect the user to the home page.
 app.get('/api/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login' }), function (req, res) {
-      res.redirect('http://localhost:3000/');
+      res.redirect('http://localhost:3000/profile');
   }
   );
 
