@@ -9,24 +9,27 @@ const ProfilePage = ({ user, authenticated }) => {
         if (user.recipes.length !== 0) {
             setClicked(true);
             setLoading(true);
-            var arr = [];
+            var str = "";
             user.recipes.forEach((recipe, index) => {
-                fetch(`https://api.spoonacular.com/recipes/${recipe}/information?apiKey=f245917d9cf94d6b9dc49f86a962013f`)
-                    .then(response => response.json())
-                    .then(body => {
-                        if (body.code === 402) {
-                            throw new Error();
-                        }
-                        arr.push(body);
-                        if (arr.length === user.recipes.length) {
-                            setRecipes(arr);
-                            setLoading(false);
-                        }
-                    }).catch(err => {
-                        console.log('err fetching from api');
-                        setError(true);
-                    })
-            });
+                if (index === user.recipes.length - 1) {
+                    str += recipe;
+                } else {
+                    str += recipe + ",";
+                }
+            })
+            fetch(`https://api.spoonacular.com/recipes/informationBulk?ids=${str}&apiKey=b4eb8132e6de41dbae752d1fd776be77`)
+                .then(response => response.json())
+                .then(body => {
+                    if (body.code === 402 || body.code === 400) {
+                        throw new Error();
+                    }
+                    setRecipes(body);
+                    setLoading(false);
+                }).catch(err => {
+                    console.log('err fetching from api');
+                    setError(true);
+                })
+
         }
     }
 
@@ -44,7 +47,21 @@ const ProfilePage = ({ user, authenticated }) => {
                         : (<>{loading ? (<p>loading </p>)
                             : (recipes.map((recipe, key) => (
                                 <li key={key} className='list-group-item' >
-                                    {recipe.title}
+                                    <div className="media" >
+                                        <img className="mr-3" height="100px;" src={recipe.image} />
+                                        <div className="media-body" >
+                                            <h5 className="mt-0">
+                                                {recipe.title}
+                                            </h5>
+                                            <p className="">
+                                                Ready in {recipe.readyInMinutes} minutes. Serves {recipe.servings}
+                                            </p>
+                                            <p dangerouslySetInnerHTML={{__html: recipe.summary}}>
+                                                
+                                            </p>
+                                            <a className="" href={recipe.sourceUrl}>View Recipe</a>
+                                        </div>
+                                    </div>
                                 </li>
                             )))}</>)}
                 </ul>

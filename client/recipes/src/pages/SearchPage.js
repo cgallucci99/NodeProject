@@ -11,7 +11,7 @@ const SearchPage = ({ user, authenticated, setUserRecipes }) => {
     const searchFunc = (searchText) => {
         setError(false);
         setLoading(true);
-        fetch(`https://api.spoonacular.com/recipes/search?query=${searchText}&number=5&apiKey=f245917d9cf94d6b9dc49f86a962013f`)
+        fetch(`https://api.spoonacular.com/recipes/search?query=${searchText}&number=5&apiKey=b4eb8132e6de41dbae752d1fd776be77`)
             .then(results => results.json())
             .then(body => {
                 if (body.code === 402) {
@@ -36,8 +36,20 @@ const SearchPage = ({ user, authenticated, setUserRecipes }) => {
                     <ul className="list-group">
                         {
                             searchResults.results.map((res, key) => (
-                                <li key={key} className="list-group-item">
-                                    {res.title} <AddRecipeButton user={user} authenticated={authenticated} id={res.id} setUserRecipes={setUserRecipes} />
+                                <li key={key} className="list-group-item ">
+                                    <div className="media" >
+                                        <img className="mr-3" height="100px;" src={'https://spoonacular.com/recipeImages/' + res.id + '-240x150.jpg'} />
+                                        <div className="media-body" >
+                                            <h5 className="mt-0">
+                                                {res.title}
+                                            </h5>
+                                            <p className="">
+                                                Ready in {res.readyInMinutes} minutes. Serves {res.servings}
+                                            </p>
+                                            <a className="" href={res.sourceUrl}>View Recipe</a>
+                                            <AddRecipeButton user={user} authenticated={authenticated} id={res.id} setUserRecipes={setUserRecipes} />
+                                        </div>
+                                    </div>
                                 </li>
                             ))
                         }
