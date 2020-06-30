@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const LogoutPage = ({ setAuthenticated }) => {
     const [message, setMessage] = useState('');
@@ -24,7 +25,10 @@ const LogoutPage = ({ setAuthenticated }) => {
     }, []);
     return (
         <div className="container">
-            {message}
+            <div className="alert alert-success">
+                {message}
+                <Link className="ml-3 btn btn-primary" to="/" >Return to Home Page</Link>
+            </div>
         </div>
     );
 }

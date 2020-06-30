@@ -33,7 +33,7 @@ function isAuthenticated(req, res, next) {
     if (req.user) {
         next();
     } else {
-        res.redirect('/login');
+        res.status(404).json({'message':'not logged in'});
     }
 }
 
@@ -101,6 +101,7 @@ app.get("/search", function(req, res) {
 });
 
 app.post("/addRecipe", isAuthenticated, function(req, res) {
+    console.log('in add recipe');
     const client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
         const collection = client.db("recipes").collection("users");
@@ -109,12 +110,12 @@ app.post("/addRecipe", isAuthenticated, function(req, res) {
                 console.log(r.value);
                 req.logIn(r.value, err => {
                     if (err) {return next(err);}
-                    return res.redirect('profile');
+                    res.json({"message": 'success', user: r.value});
                 });
         }).then(() => {
             client.close();
         }).catch(err => {
-            res.send('fail');
+            res.status(402).json({"message": 'fail'});
         });
     });
 })

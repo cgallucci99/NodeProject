@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import AddRecipeButton from '../components/AddRecipeButton';
 
-const SearchPage = () => {
+const SearchPage = ({ user, authenticated, setUserRecipes }) => {
     const [searchResults, setSearchResults] = useState({ "results": [] });
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -10,13 +11,13 @@ const SearchPage = () => {
     const searchFunc = (searchText) => {
         setError(false);
         setLoading(true);
-        fetch(`https://api.spoonacular.com/recipes/search?query=${searchText}&number=5&apiKey=62db462a6cb442368aa7f2cb1af3a615`)
+        fetch(`https://api.spoonacular.com/recipes/search?query=${searchText}&number=5&apiKey=f245917d9cf94d6b9dc49f86a962013f`)
             .then(results => results.json())
             .then(body => {
-                if(body.code===402) {
+                if (body.code === 402) {
                     throw new Error();
                 }
-                setSearchResults({"results": body});
+                setSearchResults(body);
             })
             .catch((err) => {
                 setError(true);
@@ -24,8 +25,7 @@ const SearchPage = () => {
         setLoading(false);
     }
     useEffect(() => {
-        console.log(`query: ${query}`);
-        searchFunc();
+        searchFunc(query);
     }, [query])
     return (
         <div className="container">
@@ -37,7 +37,7 @@ const SearchPage = () => {
                         {
                             searchResults.results.map((res, key) => (
                                 <li key={key} className="list-group-item">
-                                    {res.title}
+                                    {res.title} <AddRecipeButton user={user} authenticated={authenticated} id={res.id} setUserRecipes={setUserRecipes} />
                                 </li>
                             ))
                         }

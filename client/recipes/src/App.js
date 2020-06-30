@@ -27,11 +27,9 @@ function App() {
         "Access-Control-Allow-Credentials": true
       }
     }).then(response => {
-      console.log(`response: ${response}`)
       if (response.status === 200) return response.json();
       throw new Error("failed to authenticate user");
     }).then(responseJSON => {
-      console.log(`response.user: ${JSON.stringify(responseJSON.user)}`)
       setAuthenticated(true);
       setUserId(responseJSON.user._id);
       setUsername(responseJSON.user.name);
@@ -39,7 +37,7 @@ function App() {
     }).catch(err => {
       setAuthenticated(false);
       setError("Failed to authenticate user");
-      console.log(err);
+      console.log(error);
     });
   }, []);
   return (
@@ -47,7 +45,9 @@ function App() {
       <NavBar user={{ name: username, id: userId, recipes: userRecipes }} authenticated={authenticated} />
       <Switch >
         <Route path="/" component={HomePage} exact />
-        <Route path="/search" component={SearchPage} />
+        <Route path="/search" render={(props) => (
+          <SearchPage {...props} user={{ name: username, id: userId, recipes: userRecipes}} authenticated={authenticated} setUserRecipes={setUserRecipes} />
+        )}  />
         <Route path="/login" component={LoginPage} />
         <Route path="/profile" render={(props) => (
           <ProfilePage {...props} user={{ name: username, id: userId, recipes: userRecipes }} authenticated={authenticated} />
