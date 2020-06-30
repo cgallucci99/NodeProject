@@ -14,10 +14,13 @@ const NavBar = ({ user, authenticated }) => {
                     <li className="nav-item">
                         <Link className="nav-link" to="/">Home</Link>
                     </li>
-                    <li className="nav-item">
-                        {/* TODO */}
-                        <a className="nav-link" href="#">Link</a>
-                    </li>
+                    {authenticated ? 
+                    (<li className="nav-item">
+                        <Link className="nav-link" to="/profile">Profile</Link>
+                    </li>) : (
+                        <span></span>
+                    )
+                    }
 
                 </ul>
                 {!authenticated ? (
