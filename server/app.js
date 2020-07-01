@@ -8,7 +8,6 @@ var express     = require("express"),
     cors = require('cors');
 require('dotenv').config();
 var app = express();
-app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -29,6 +28,7 @@ app.use(cors({
     credentials: true
 }));
 
+// Middleware to check if there is currently an authenticated user
 function isAuthenticated(req, res, next) {
     if (req.user) {
         next();
@@ -37,7 +37,7 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-// connect db
+// Set up db connection string
 var pw = process.env.pw;
 const MongoClient = mongo.MongoClient;
 const uri = "mongodb+srv://admin:"+pw+"@recipes-rcffv.mongodb.net/recipes?retryWrites=true&w=majority";
@@ -84,22 +84,7 @@ passport.deserializeUser((user, done) => {
 });
 
 // routes
-app.get('/', (req, res) => {
-  res.render('index');
-})
-
-app.get("/search", function(req, res) {
-    fetch('https://api.spoonacular.com/recipes/search?query='+req.query.search+'&number=5&apiKey=62db462a6cb442368aa7f2cb1af3a615')
-    .then(response => response.json())
-    .then(body => {
-        res.render('search', {results: body.results});
-    })
-    .catch(err => {
-        res.send('oops, there was an error')
-        console.log(err);
-    });
-});
-
+// Adds a recipe to the current user if one is authenticated. Recipe is passed in the req.body
 app.post("/addRecipe", isAuthenticated, function(req, res) {
     console.log('in add recipe');
     const client = new MongoClient(uri, { useNewUrlParser: true });
@@ -120,38 +105,13 @@ app.post("/addRecipe", isAuthenticated, function(req, res) {
     });
 })
 
-
-app.get('/profile', isAuthenticated, (req, res) => {
-    res.render('profile', {user:req.user});
-})
-
-app.get('/login', function(req, res) {
-    if (req.user) {
-        res.redirect('/profile')
-    } else {
-        res.render('login');
-    }
-});
-
 // Logout route
 app.get('/api/logout', (req, res) => {
     req.logout(); 
     res.json({message: "successfully logged out"});
 });
 
-
-// api routes
-app.get("/api/getRecipe/:recipeID", function(req, res) {
-    fetch('https://api.spoonacular.com/recipes/'+req.params.recipeID+'/information?apiKey=62db462a6cb442368aa7f2cb1af3a615')
-    .then(response => response.json())
-    .then(body => {
-        res.json(body);
-    })
-    .catch(err => {
-        res.json(err);
-    });
-});
-
+// Returns the user if there is one logged in
 app.get('/api/auth/login/success', function(req, res) {
     if (req.user) {
         res.json({
