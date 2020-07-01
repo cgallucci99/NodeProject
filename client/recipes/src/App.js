@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import NavBar from './components/NavBar';
 import LogoutPage from './pages/LogoutPage';
+import Footer from './components/Footer';
 
 function App() {
   const [userId, setUserId] = useState('');
@@ -56,6 +57,7 @@ function App() {
           <LogoutPage setAuthenticated={setAuthenticated} />
         )} />
       </Switch>
+      <Footer />
     </Router>
   );
 }

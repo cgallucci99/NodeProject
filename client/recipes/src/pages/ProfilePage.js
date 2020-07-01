@@ -38,9 +38,13 @@ const ProfilePage = ({ user, authenticated }) => {
             {!authenticated ? (
                 <h1>Welcome, please login to view profile</h1>
             ) : (
-                    <h1>Welcome, {user.name.givenName}</h1>
+                    <>
+                        <h1>Welcome, {user.name.givenName}</h1>
+                        {clicked ? (<span></span>) : (
+                            <button className='btn btn-primary' onClick={getRecipes}>View Saved Recipes</button>
+                        )}
+                    </>
                 )}
-            <button className='btn btn-primary' onClick={getRecipes}>View Saved Recipes</button>
             {clicked ? (
                 <ul id='recipe-list' className="list-group mt-3">
                     {error ? (<p>there was an error</p>)
@@ -56,8 +60,8 @@ const ProfilePage = ({ user, authenticated }) => {
                                             <p className="">
                                                 Ready in {recipe.readyInMinutes} minutes. Serves {recipe.servings}
                                             </p>
-                                            <p dangerouslySetInnerHTML={{__html: recipe.summary}}>
-                                                
+                                            <p dangerouslySetInnerHTML={{ __html: recipe.summary }}>
+
                                             </p>
                                             <a className="" href={recipe.sourceUrl}>View Recipe</a>
                                         </div>
