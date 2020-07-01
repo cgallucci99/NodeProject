@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import RecipeListItem from '../components/RecipeListItem';
 
 const ProfilePage = ({ user, authenticated }) => {
     const [recipes, setRecipes] = useState([]);
@@ -17,7 +18,7 @@ const ProfilePage = ({ user, authenticated }) => {
                     str += recipe + ",";
                 }
             })
-            fetch(`https://api.spoonacular.com/recipes/informationBulk?ids=${str}&apiKey=b4eb8132e6de41dbae752d1fd776be77`)
+            fetch(`https://api.spoonacular.com/recipes/informationBulk?ids=${str}&apiKey=b4eb8132e6de41dbae752d1fd776be77&includeNutrition=true`)
                 .then(response => response.json())
                 .then(body => {
                     if (body.code === 402 || body.code === 400) {
@@ -51,21 +52,7 @@ const ProfilePage = ({ user, authenticated }) => {
                         : (<>{loading ? (<p>loading </p>)
                             : (recipes.map((recipe, key) => (
                                 <li key={key} className='list-group-item' >
-                                    <div className="media" >
-                                        <img className="mr-3" height="100px;" src={recipe.image} />
-                                        <div className="media-body" >
-                                            <h5 className="mt-0">
-                                                {recipe.title}
-                                            </h5>
-                                            <p className="">
-                                                Ready in {recipe.readyInMinutes} minutes. Serves {recipe.servings}
-                                            </p>
-                                            <p dangerouslySetInnerHTML={{ __html: recipe.summary }}>
-
-                                            </p>
-                                            <a className="" href={recipe.sourceUrl}>View Recipe</a>
-                                        </div>
-                                    </div>
+                                    <RecipeListItem recipe={recipe} />
                                 </li>
                             )))}</>)}
                 </ul>
