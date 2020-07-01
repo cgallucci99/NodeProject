@@ -35,12 +35,12 @@ const ProfilePage = ({ user, authenticated, setUserRecipes }) => {
     }
 
     return (
-        <div className="container" style={{ height: "80vh" }}>
+        <div className="container" style={(clicked ? ({height: "100%"}): ({ height: "80vh" }))}>
             {!authenticated ? (
-                <h1>Welcome, please login to view profile</h1>
+                <h1 className="text-center">Welcome, please login to view profile</h1>
             ) : (
                     <>
-                        <h1>Welcome, {user.name.givenName}</h1>
+                        <h1 className="text-center">Welcome, {user.name.givenName}</h1>
                         {clicked ? (<span></span>) : (
                             <button className='btn btn-primary' onClick={getRecipes}>View Saved Recipes</button>
                         )}

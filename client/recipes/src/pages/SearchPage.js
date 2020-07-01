@@ -7,7 +7,7 @@ import RecipeListItem from '../components/RecipeListItem';
 const SearchPage = ({ user, authenticated, setUserRecipes }) => {
     const [searchResults, setSearchResults] = useState({ "results": [] });
     const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [offset, setOffset] = useState(0);
     const query = queryString.parse(useLocation().search).search;
     const searchFunc = (searchText) => {
@@ -31,7 +31,7 @@ const SearchPage = ({ user, authenticated, setUserRecipes }) => {
         searchFunc(query);
     }, [query])
     return (
-        <div className="container clearfix" style={{ height: "80vh" }}>
+        <div className="container clearfix" >
             <h2>Results: </h2>
             {loading ? (<p>Loading . . .</p>) :
                 (<>{error ? (<p>there was and error</p>) :

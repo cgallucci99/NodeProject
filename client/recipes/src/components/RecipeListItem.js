@@ -11,7 +11,7 @@ const RecipeListItem = ({ recipe }) => {
                 <p className="">
                     Ready in {recipe.readyInMinutes} minutes. Serves {recipe.servings}
                 </p>
-                <div className="btn-group">
+                <div className="btn-group mb-1">
                     <a className="btn btn-primary" href={recipe.sourceUrl}>View Recipe Site</a>
                     <button className="btn btn-primary" data-toggle="collapse" data-target={"#collapse" + recipe.id}>View More Details</button>
                     <button className="btn btn-primary" data-toggle="collapse" data-target={"#collapsetwo" + recipe.id}>View Nutrition</button>
