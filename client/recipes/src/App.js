@@ -51,7 +51,7 @@ function App() {
         )}  />
         <Route path="/login" component={LoginPage} />
         <Route path="/profile" render={(props) => (
-          <ProfilePage {...props} user={{ name: username, id: userId, recipes: userRecipes }} authenticated={authenticated} />
+          <ProfilePage {...props} user={{ name: username, id: userId, recipes: userRecipes }} authenticated={authenticated} setUserRecipes={setUserRecipes} />
         )} />
         <Route path="/logout" render={(props) => (
           <LogoutPage setAuthenticated={setAuthenticated} />

@@ -24,7 +24,7 @@ const LogoutPage = ({ setAuthenticated }) => {
         });
     }, []);
     return (
-        <div className="container">
+        <div className="container" style={{ height: "80vh" }}>
             <div className="alert alert-success">
                 {message}
                 <Link className="ml-3 btn btn-primary" to="/" >Return to Home Page</Link>

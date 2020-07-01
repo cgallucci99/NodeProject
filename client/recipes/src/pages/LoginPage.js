@@ -5,7 +5,7 @@ const LoginPage = () => {
         window.open("http://localhost:8000/api/auth/google", "_self");
     }
     return (
-        <div className="container">
+        <div className="container" style={{ height: "80vh" }}>
             <div className="row">
                 <div className="col-3"></div>
                 <div className="col-6">

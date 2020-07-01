@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import RecipeListItem from '../components/RecipeListItem';
+import RemoveRecipeButton from '../components/RemoveRecipeButton';
 
-const ProfilePage = ({ user, authenticated }) => {
+const ProfilePage = ({ user, authenticated, setUserRecipes }) => {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -30,12 +31,11 @@ const ProfilePage = ({ user, authenticated }) => {
                     console.log('err fetching from api');
                     setError(true);
                 })
-
         }
     }
 
     return (
-        <div className="container">
+        <div className="container" style={{ height: "80vh" }}>
             {!authenticated ? (
                 <h1>Welcome, please login to view profile</h1>
             ) : (
@@ -53,6 +53,7 @@ const ProfilePage = ({ user, authenticated }) => {
                             : (recipes.map((recipe, key) => (
                                 <li key={key} className='list-group-item' >
                                     <RecipeListItem recipe={recipe} />
+                                    <RemoveRecipeButton id={recipe.id} setUserRecipes={setUserRecipes} />
                                 </li>
                             )))}</>)}
                 </ul>

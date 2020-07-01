@@ -86,13 +86,11 @@ passport.deserializeUser((user, done) => {
 // routes
 // Adds a recipe to the current user if one is authenticated. Recipe is passed in the req.body
 app.post("/addRecipe", isAuthenticated, function(req, res) {
-    console.log('in add recipe');
     const client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
         const collection = client.db("recipes").collection("users");
         const userID = new mongo.ObjectID(req.user._id);
         collection.findOneAndUpdate({_id:userID}, {$push: {recipeIDs:req.body.recipe}}, {returnOriginal: false}).then((r) => {
-                console.log(r.value);
                 req.logIn(r.value, err => {
                     if (err) {return next(err);}
                     res.json({"message": 'success', user: r.value});
@@ -103,7 +101,26 @@ app.post("/addRecipe", isAuthenticated, function(req, res) {
             res.status(402).json({"message": 'fail'});
         });
     });
-})
+});
+
+// Removes a recipe from a user's list
+app.post('/api/removeRecipe', isAuthenticated, function(req, res) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+        const collection = client.db("recipes").collection("users");
+        const userID = new mongo.ObjectID(req.user._id);
+        collection.findOneAndUpdate({_id:userID}, {$pull: {recipeIDs:req.body.recipe}}, {returnOriginal: false}).then((r) => {
+                req.logIn(r.value, err => {
+                    if (err) {return next(err);}
+                    res.json({"message": 'success', user: r.value});
+                });
+        }).then(() => {
+            client.close();
+        }).catch(err => {
+            res.status(402).json({"message": 'fail'});
+        });
+    });
+});
 
 // Logout route
 app.get('/api/logout', (req, res) => {

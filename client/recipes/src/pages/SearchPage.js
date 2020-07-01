@@ -31,7 +31,7 @@ const SearchPage = ({ user, authenticated, setUserRecipes }) => {
         searchFunc(query);
     }, [query])
     return (
-        <div className="container clearfix">
+        <div className="container clearfix" style={{ height: "80vh" }}>
             <h2>Results: </h2>
             {loading ? (<p>Loading . . .</p>) :
                 (<>{error ? (<p>there was and error</p>) :
