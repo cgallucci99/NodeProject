@@ -118,7 +118,8 @@ app.post('/api/removeRecipe', isAuthenticated, function(req, res) {
     client.connect(err => {
         const collection = client.db("recipes").collection("users");
         const userID = new mongo.ObjectID(req.user._id);
-        collection.findOneAndUpdate({_id:userID}, {$pull: {recipeIDs:req.body.recipe}}, {returnOriginal: false}).then((r) => {
+        collection.findOneAndUpdate({_id:userID}, {$pull: {recipeIDs:req.body.recipe}}, {returnOriginal: false})
+        .then((r) => {
                 req.logIn(r.value, err => {
                     if (err) {return next(err);}
                     res.json({"message": 'success', user: r.value});
@@ -130,6 +131,37 @@ app.post('/api/removeRecipe', isAuthenticated, function(req, res) {
         });
     });
 });
+
+app.post('/api/createRecipe', isAuthenticated, function(req, res) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+        const collection = client.db("recipes").collection("recipes");
+        const userID = new mongo.ObjectID(req.user._id);
+        var newRecipe = {
+            title: req.body.title,
+            time: req.body.time,
+            servings: req.body.servings,
+            ingredients: req.body.ingredients,
+            instructions: req.body.instructions,
+            image: req.body.image
+        }
+        collection.insertOne(newRecipe)
+        .then(r => {
+            console.log('success creating recipe')
+            if (process.env.development == 'true') {
+                res.redirect('http://localhost:3000/profile')
+            } else {
+                res.redirect('/profile')
+            }
+        })
+        .then(() => {
+            client.close();
+        }).catch(e => {
+            console.log('error creating recipe: ' + e);
+            res.json({message: 'fail'});
+        });
+    });
+})
 
 // Logout route
 app.get('/api/logout', (req, res) => {
