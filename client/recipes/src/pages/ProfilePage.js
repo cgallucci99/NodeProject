@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import RecipeListItem from '../components/RecipeListItem';
 import RemoveRecipeButton from '../components/RemoveRecipeButton';
+import Loader from 'react-loader-spinner';
 
 const ProfilePage = ({ user, authenticated, setUserRecipes }) => {
     const [recipes, setRecipes] = useState([]);
@@ -35,7 +36,7 @@ const ProfilePage = ({ user, authenticated, setUserRecipes }) => {
     }
 
     return (
-        <div className="container" style={(clicked ? ({height: "100%"}): ({ height: "80vh" }))}>
+        <div className="container" style={(clicked ? ({height: "100%"}): ({ height: "95vh" }))}>
             {!authenticated ? (
                 <h1 className="text-center">Welcome, please login to view profile</h1>
             ) : (
@@ -49,7 +50,7 @@ const ProfilePage = ({ user, authenticated, setUserRecipes }) => {
             {clicked ? (
                 <ul id='recipe-list' className="list-group mt-3">
                     {error ? (<p>there was an error</p>)
-                        : (<>{loading ? (<p>loading </p>)
+                        : (<>{loading ? (<div className='d-flex justify-content-center'><Loader type='TailSpin' color='#000000' height={100} width={100} /></div>)
                             : (recipes.map((recipe, key) => (
                                 <li key={key} className='list-group-item' >
                                     <RecipeListItem recipe={recipe} />
