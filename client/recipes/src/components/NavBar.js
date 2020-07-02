@@ -12,25 +12,33 @@ const NavBar = ({ user, authenticated }) => {
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
-                        <Link className="nav-link" to="/">Home</Link>
+                        <span data-toggle="collapse" data-target=".navbar-collapse.show">
+                            <Link className="nav-link" to="/">Home</Link>
+                        </span>
                     </li>
-                    {authenticated ? 
-                    (<li className="nav-item">
-                        <Link className="nav-link" to="/profile">Profile</Link>
-                    </li>) : (
-                        <span></span>
-                    )
+                    {authenticated ?
+                        (<li className="nav-item">
+                            <span data-toggle="collapse" data-target=".navbar-collapse.show">
+                                <Link className="nav-link" to="/profile">Profile</Link>
+                            </span>
+                        </li>) : (
+                            <span></span>
+                        )
                     }
 
                 </ul>
                 {!authenticated ? (
-                    <Link className="btn btn-secondary my-2 my-sm-0" to="/login">Login</Link>
+                    <span data-toggle="collapse" data-target=".navbar-collapse.show">
+                        <Link className="btn btn-secondary my-2 my-sm-0" to="/login">Login</Link>
+                    </span>
                 ) : (
-                    <>
-                    <span className="navbar-text mr-2">Welcome, {user.name.givenName}</span>
-                    <Link className="btn btn-secondary my-2 my-sm-0" to="/logout">Logout</Link>
-                    </>
-                )}
+                        <>
+                            <span className="navbar-text mr-2">Welcome, {user.name.givenName}</span>
+                            <span data-toggle="collapse" data-target=".navbar-collapse.show">
+                                <Link className="btn btn-secondary my-2 my-sm-0" to="/logout">Logout</Link>
+                            </span>
+                        </>
+                    )}
             </div>
         </nav>
     );
