@@ -44,6 +44,13 @@ var pw = process.env.pw;
 const MongoClient = mongo.MongoClient;
 const uri = "mongodb+srv://admin:"+pw+"@recipes-rcffv.mongodb.net/recipes?retryWrites=true&w=majority";
 
+var google_redirect;
+if (process.env.development == 'true') {
+    google_redirect = "http://localhost:8000/api/auth/google/callback"
+} else {
+    google_redirect = "http://ec2-13-59-8-125.us-east-2.compute.amazonaws.com/api/auth/google/callback"
+}
+
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, and Google
@@ -51,7 +58,7 @@ const uri = "mongodb+srv://admin:"+pw+"@recipes-rcffv.mongodb.net/recipes?retryW
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:8000/api/auth/google/callback"
+    callbackURL: google_redirect
   },
   function(accessToken, refreshToken, profile, done) {
     const client = new MongoClient(uri,{poolSize: 10, bufferMaxEntries: 0, reconnectTries: 5000, useNewUrlParser: true,useUnifiedTopology: true});
