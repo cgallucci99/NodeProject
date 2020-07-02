@@ -35,9 +35,9 @@ const AddRecipeButton = ({ url, user, authenticated, id, setUserRecipes }) => {
 
     return (
         <>
-            {added ? (<button className='float-right mr-2 btn btn-secondary' disabled>Already added</button>) : (
+            {added ? (<button className='float-right mr-2 btn btn-secondary btn-sm' disabled>&nbsp;&#10003;&nbsp;</button>) : (
                 <>{authenticated ? (
-                    <button className='float-right mr-2 btn btn-primary' onClick={addToProfile}>Add to personal recipes</button>
+                    <button className='float-right mr-2 btn btn-success btn-sm' onClick={addToProfile}>&nbsp;+&nbsp;</button>
                 ) : (<span></span>)}</>
             )}
         </>

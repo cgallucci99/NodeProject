@@ -36,7 +36,7 @@ const ProfilePage = ({ url, user, authenticated, setUserRecipes }) => {
     }
 
     return (
-        <div className="container" style={(clicked ? ({height: "100%"}): ({ height: "95vh" }))}>
+        <div className="container" style={(clicked ? ({ height: "100%" }) : ({ height: "95vh" }))}>
             {!authenticated ? (
                 <h1 className="text-center">Welcome, please login to view profile</h1>
             ) : (
@@ -53,8 +53,14 @@ const ProfilePage = ({ url, user, authenticated, setUserRecipes }) => {
                         : (<>{loading ? (<div className='d-flex justify-content-center'><Loader type='TailSpin' color='#000000' height={100} width={100} /></div>)
                             : (recipes.map((recipe, key) => (
                                 <li key={key} className='list-group-item' >
-                                    <RecipeListItem recipe={recipe} />
-                                    <RemoveRecipeButton url={url} id={recipe.id} setUserRecipes={setUserRecipes} />
+                                    <div className='row'>
+                                        <div className='col-11'>
+                                            <RecipeListItem recipe={recipe} />
+                                        </div>
+                                        <div className='col-1'>
+                                            <RemoveRecipeButton url={url} id={recipe.id} setUserRecipes={setUserRecipes} />
+                                        </div>
+                                    </div>
                                 </li>
                             )))}</>)}
                 </ul>

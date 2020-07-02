@@ -52,8 +52,14 @@ const SearchPage = ({ url, user, authenticated, setUserRecipes }) => {
                                 {
                                     searchResults.results.map((res, key) => (
                                         <li key={key} className="list-group-item ">
-                                            <RecipeListItem recipe={res} />
-                                            <AddRecipeButton url={url} user={user} authenticated={authenticated} id={res.id} setUserRecipes={setUserRecipes} />
+                                            <div className='row'>
+                                                <div className='col-11'>
+                                                    <RecipeListItem recipe={res} />
+                                                </div>
+                                                <div className='col-1'>
+                                                    <AddRecipeButton url={url} user={user} authenticated={authenticated} id={res.id} setUserRecipes={setUserRecipes} />
+                                                </div>
+                                            </div>
                                         </li>
                                     ))
                                 }

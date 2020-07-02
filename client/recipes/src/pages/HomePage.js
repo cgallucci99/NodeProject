@@ -11,7 +11,7 @@ const HomePage = () => {
                 <hr className="w-50" />
                 <div className="row">
                     <div className="col-3"></div>
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <form className="" action="/search" method='GET'>
                             <div className="input-group mx-auto">
                                 <input value={searchText} name='search' onChange={(event) => setSearchText(event.target.value)} type="text" className="form-control" placeholder="Enter your search"></input>
