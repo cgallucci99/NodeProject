@@ -5,9 +5,11 @@ var express     = require("express"),
     session     = require('express-session'),
     mongo       = require('mongodb'),
     GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
-    cors = require('cors');
+    cors = require('cors'),
+    path = require('path');
 require('dotenv').config();
 var app = express();
+app.use(express.static(path.join(__dirname, '/build')));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -153,9 +155,16 @@ app.get('/api/auth/google',
 //   which, in this example, will redirect the user to the home page.
 app.get('/api/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login' }), function (req, res) {
+  if (process.env.development == 'true') {
       res.redirect('http://localhost:3000/profile');
+  } else {
+    res.redirect('http://localhost:8000/profile');
+  }
   }
   );
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/build/index.html'));
+});
 
 // start server
 app.listen(8000, '0.0.0.0', function() {

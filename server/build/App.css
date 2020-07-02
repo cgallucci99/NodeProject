@@ -1,0 +1,38 @@
+#homepage {
+  background-image: url("./FoodBackground.jpg");
+  background-size: 100%;
+}
+
+.jumbotron {
+  height: 100%;
+  background-color: #888888aa;
+  color: #ffffff;
+}
+
+/* .jumbotron h2 {
+  color: #ffffff;
+} */
+
+.navbar {
+  background-color: rgb(166, 235, 166);
+}
+
+body {
+  background-color: #fbfbfb;
+}
+
+.list-group-item {
+  background-color: #fafafa;
+}
+
+.list-group-item:nth-child(even) {
+  background-color: #fcfcfc;
+}
+
+.card {
+  background-color: #fafffa;
+}
+
+.table td {
+  border-top: 1px solid grey;
+}
