@@ -19,8 +19,7 @@ function App() {
   const [error, setError] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
   var url;
-  var development = false;
-  if (development) {
+  if (process.env.NODE_ENV == 'development') {
     url = "http://localhost:8000";
   } else {
     url = 'http://ec2-13-59-8-125.us-east-2.compute.amazonaws.com';
