@@ -166,7 +166,9 @@ app.get('/api/auth/google/callback',
     res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 
+var PORT = 8000 || process.env.PORT;
+
 // start server
-app.listen(8000, '0.0.0.0', function() {
+app.listen(PORT, '0.0.0.0', function() {
     console.log("listening on port 8000");
 })
