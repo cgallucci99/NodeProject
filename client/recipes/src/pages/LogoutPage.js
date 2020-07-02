@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const LogoutPage = ({ setAuthenticated }) => {
+const LogoutPage = ({ url, setAuthenticated }) => {
     const [message, setMessage] = useState('');
     useEffect(() => {
-        fetch("http://localhost:8000/api/logout", {
+        fetch(`${url}/api/logout`, {
             method: "GET",
             credentials: "include",
             headers: {

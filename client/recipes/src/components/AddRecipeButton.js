@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-const AddRecipeButton = ({ user, authenticated, id, setUserRecipes }) => {
+const AddRecipeButton = ({ url, user, authenticated, id, setUserRecipes }) => {
     const [added, setAdded] = useState(false);
     function addToProfile() {
-        fetch('http://localhost:8000/addRecipe', {
+        fetch(`${url}/addRecipe`, {
             method: 'post',
             body: JSON.stringify({ recipe: id }),
             credentials: "include",

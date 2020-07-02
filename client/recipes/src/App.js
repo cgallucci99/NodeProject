@@ -18,8 +18,15 @@ function App() {
   const [userRecipes, setUserRecipes] = useState([]);
   const [error, setError] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
+  var url;
+  var development = false;
+  if (development) {
+    url = "http://localhost:8000";
+  } else {
+    url = 'http://ec2-13-59-8-125.us-east-2.compute.amazonaws.com';
+  }
   useEffect(() => {
-    fetch("http://localhost:8000/api/auth/login/success", {
+    fetch(`${url}/api/auth/login/success`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -47,14 +54,16 @@ function App() {
       <Switch >
         <Route path="/" component={HomePage} exact />
         <Route path="/search" render={(props) => (
-          <SearchPage {...props} user={{ name: username, id: userId, recipes: userRecipes}} authenticated={authenticated} setUserRecipes={setUserRecipes} />
+          <SearchPage {...props} url={url} user={{ name: username, id: userId, recipes: userRecipes}} authenticated={authenticated} setUserRecipes={setUserRecipes} />
         )}  />
-        <Route path="/login" component={LoginPage} />
+        <Route path="/login" render={(props) => (
+          <LoginPage {...props} url={url} />
+        )} />
         <Route path="/profile" render={(props) => (
-          <ProfilePage {...props} user={{ name: username, id: userId, recipes: userRecipes }} authenticated={authenticated} setUserRecipes={setUserRecipes} />
+          <ProfilePage {...props} url={url} user={{ name: username, id: userId, recipes: userRecipes }} authenticated={authenticated} setUserRecipes={setUserRecipes} />
         )} />
         <Route path="/logout" render={(props) => (
-          <LogoutPage setAuthenticated={setAuthenticated} />
+          <LogoutPage url={url} setAuthenticated={setAuthenticated} />
         )} />
       </Switch>
       <Footer />

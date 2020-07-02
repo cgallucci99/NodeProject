@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-const RemoveRecipeButton = ({ id, setUserRecipes }) => {
+const RemoveRecipeButton = ({ url, id, setUserRecipes }) => {
     const [removed, setRemoved] = useState(false);
     function removeFromProfile() {
-        fetch('http://localhost:8000/api/removeRecipe', {
+        fetch(`${url}/api/removeRecipe`, {
             method: 'post',
             body: JSON.stringify({ recipe: id }),
             credentials: "include",

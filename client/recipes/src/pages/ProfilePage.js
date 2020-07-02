@@ -3,7 +3,7 @@ import RecipeListItem from '../components/RecipeListItem';
 import RemoveRecipeButton from '../components/RemoveRecipeButton';
 import Loader from 'react-loader-spinner';
 
-const ProfilePage = ({ user, authenticated, setUserRecipes }) => {
+const ProfilePage = ({ url, user, authenticated, setUserRecipes }) => {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -54,7 +54,7 @@ const ProfilePage = ({ user, authenticated, setUserRecipes }) => {
                             : (recipes.map((recipe, key) => (
                                 <li key={key} className='list-group-item' >
                                     <RecipeListItem recipe={recipe} />
-                                    <RemoveRecipeButton id={recipe.id} setUserRecipes={setUserRecipes} />
+                                    <RemoveRecipeButton url={url} id={recipe.id} setUserRecipes={setUserRecipes} />
                                 </li>
                             )))}</>)}
                 </ul>

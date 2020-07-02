@@ -5,7 +5,7 @@ import AddRecipeButton from '../components/AddRecipeButton';
 import RecipeListItem from '../components/RecipeListItem';
 import Loader from 'react-loader-spinner'
 
-const SearchPage = ({ user, authenticated, setUserRecipes }) => {
+const SearchPage = ({ url, user, authenticated, setUserRecipes }) => {
     const [searchResults, setSearchResults] = useState({ "results": [] });
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -53,7 +53,7 @@ const SearchPage = ({ user, authenticated, setUserRecipes }) => {
                                     searchResults.results.map((res, key) => (
                                         <li key={key} className="list-group-item ">
                                             <RecipeListItem recipe={res} />
-                                            <AddRecipeButton user={user} authenticated={authenticated} id={res.id} setUserRecipes={setUserRecipes} />
+                                            <AddRecipeButton url={url} user={user} authenticated={authenticated} id={res.id} setUserRecipes={setUserRecipes} />
                                         </li>
                                     ))
                                 }

@@ -1,8 +1,8 @@
 import React from 'react';
 
-const LoginPage = () => {
+const LoginPage = ({url}) => {
     const login = () => {
-        window.open("http://localhost:8000/api/auth/google", "_self");
+        window.open(`${url}/api/auth/google`, "_self");
     }
     return (
         <div className="container" style={{ height: "80vh" }}>
