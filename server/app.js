@@ -158,7 +158,7 @@ app.get('/api/auth/google/callback',
   if (process.env.development == 'true') {
       res.redirect('http://localhost:3000/profile');
   } else {
-    res.redirect('http://localhost:8000/profile');
+    res.redirect('/profile');
   }
   }
   );
@@ -166,7 +166,7 @@ app.get('/api/auth/google/callback',
     res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 
-var PORT = 8000 || process.env.PORT;
+var PORT = 8000 ;
 
 // start server
 app.listen(PORT, '0.0.0.0', function() {
