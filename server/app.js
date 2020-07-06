@@ -191,7 +191,7 @@ function parseNutrition(ingredients, servings) {
         });
     });
     nutrition.nutrients.forEach(nutrient => {
-        nutrient.amount = nutrient.amount / servings;
+        nutrient.amount = Math.round(nutrient.amount / servings);
     })
     return nutrition;
 }
