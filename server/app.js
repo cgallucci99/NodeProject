@@ -7,7 +7,8 @@ var express = require("express"),
     GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
     cors = require('cors'),
     path = require('path'),
-    multer = require('multer');
+    multer = require('multer'),
+    FormData = require('form-data');
 require('dotenv').config();
 var app = express();
 app.use(express.static(path.join(__dirname, '/build')));
@@ -31,23 +32,6 @@ app.use(cors({
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true
 }));
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, 'uploads'));
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
-
-const imageFilter = function (req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
-        req.fileValidationError = 'Only image files are allowed!';
-        return cb(new Error('Only image files are allowed!'), false);
-    }
-    cb(null, true);
-}
 
 // Middleware to check if there is currently an authenticated user
 function isAuthenticated(req, res, next) {
@@ -151,21 +135,19 @@ app.post('/api/removeRecipe', isAuthenticated, function (req, res) {
     });
 });
 
-app.post('/api/createRecipe', isAuthenticated, function (req, res) {
-    var img = req.body.image;
-    let upload = multer({ storage: storage, fileFilter: imageFilter }).single('image');
-    upload(req, res, function (err) {
-        if (req.fileValidationError) {
-            return res.json({ message: 'fail', why: req.fileValidationError })
-        } else if (err instanceof multer.MulterError) {
-            return res.json({ message: 'fail', why: err })
-        } else if (err) {
-            return res.json({ message: 'fail', why: err })
-        }
-        img = req.file.path;
-    });
+app.post('/api/createRecipe', isAuthenticated, multer({storage: multer.memoryStorage()}).single('image'), function (req, res) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(async err => {
+        var formData = new FormData();
+        formData.append("image", req.file.buffer )
+        const imgurResponse = await fetch('https://api.imgur.com/3/image', {
+            method: 'post',
+            headers: {
+                "Authorization": `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
+            },
+            body: formData
+        })
+        const imgurBody = await imgurResponse.json();
         var ingredients = [];
         var formBody = `ingredientList=${encodeURIComponent(req.body.ingredients)}&servings=${encodeURIComponent(req.body.servings)}&includeNutrition=true`;
         const response = await fetch('https://api.spoonacular.com/recipes/parseIngredients?apiKey=b4eb8132e6de41dbae752d1fd776be77', {
@@ -193,7 +175,7 @@ app.post('/api/createRecipe', isAuthenticated, function (req, res) {
             servings: req.body.servings,
             ingredients: ingredients,
             instructions: req.body.instructions,
-            image: img
+            image: imgurBody.data.link
         }
         collection.insertOne(newRecipe)
             .then(r => {
