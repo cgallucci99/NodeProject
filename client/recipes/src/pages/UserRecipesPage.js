@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Loader from 'react-loader-spinner'
 import { Link } from 'react-router-dom';
+import RecipeListItem from '../components/RecipeListItem';
 
 const UserRecipesPage = ({ url, user, authenticated }) => {
     const [recipes, setRecipes] = useState([]);
@@ -45,7 +46,7 @@ const UserRecipesPage = ({ url, user, authenticated }) => {
                             {
                                 recipes.map((recipe, key) => (
                                     <li key={key} className="list-group-item">
-                                        <Link to="/userRecipe" user={user} authenticated={authenticated} recipe={recipe} >{recipe.title}</Link>
+                                        <RecipeListItem recipe={recipe} />
                                     </li>
                                 ))
                             }

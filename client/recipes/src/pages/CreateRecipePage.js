@@ -67,6 +67,10 @@ const CreateRecipePage = ({ url, user, authenticated }) => {
                         <label htmlFor="instructions">Instructions</label>
                         <textarea className="form-control" placeholder="Separate instrucions on new lines" id="instructions" name="instructions" rows={50} style={{height: "100px"}} />
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="summary">Summary</label>
+                        <textarea className="form-control" placeholder="Add a summary of your recipe" id="summary" name="summary" rows={50} style={{height: "100px"}} />
+                    </div>
                     <ImageUploader 
                         withIcon={true}
                         onChange={onDrop}

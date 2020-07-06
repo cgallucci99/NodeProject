@@ -135,6 +135,67 @@ app.post('/api/removeRecipe', isAuthenticated, function (req, res) {
     });
 });
 
+function parseNutrition(ingredients, servings) {
+    var nutrition = {
+        nutrients: [
+            {
+                "title": "Calories",
+                "amount": 0,
+                "unit": "cal"
+            },
+            {
+                "title": "Fat",
+                "amount": 0,
+                "unit": "g"
+            },
+            {
+                "title": "Saturated Fat",
+                "amount": 0,
+                "unit": "g"
+            },
+            {
+                "title": "Carbohydrates",
+                "amount": 0,
+                "unit": "g"
+            },
+            {
+                "title": "Net Carbohydrates",
+                "amount": 0,
+                "unit": "g"
+            },
+            {
+                "title": "Sugar",
+                "amount": 0,
+                "unit": "g"
+            },
+            {
+                "title": "Cholesterol",
+                "amount": 0,
+                "unit": "mg"
+            },
+            {
+                "title": "Sodium",
+                "amount": 0,
+                "unit": "mg"
+            },
+            {
+                "title": "Protein",
+                "amount": 0,
+                "unit": "g"
+            },
+        ]
+    } 
+    ingredients.forEach(ingredient => {
+        nutrition.nutrients.forEach((nutrient, i) => {
+            nutrient.amount += ingredient.nutrition.nutrients[i].amount;
+        });
+    });
+    nutrition.nutrients.forEach(nutrient => {
+        nutrient.amount = nutrient.amount / servings;
+    })
+    return nutrition;
+}
+
 app.post('/api/createRecipe', isAuthenticated, multer({storage: multer.memoryStorage()}).single('image'), function (req, res) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(async err => {
@@ -163,7 +224,6 @@ app.post('/api/createRecipe', isAuthenticated, multer({storage: multer.memorySto
                 "name": ingredient.originalName,
                 "unit": ingredient.unit,
                 "image": `https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}`,
-                "nutrition": ingredient.nutrition
             })
         })
         const collection = client.db("recipes").collection("recipes");
@@ -171,11 +231,14 @@ app.post('/api/createRecipe', isAuthenticated, multer({storage: multer.memorySto
         var newRecipe = {
             userID: userID,
             title: req.body.title,
-            time: req.body.time,
+            readyInMinutes: req.body.time,
             servings: req.body.servings,
             ingredients: ingredients,
             instructions: req.body.instructions,
-            image: imgurBody.data.link
+            image: imgurBody.data.link,
+            nutrition: parseNutrition(body, req.body.servings),
+            id: req.body.title.substring(0,5) + Date.now().toString(),
+            summary: req.body.summary
         }
         collection.insertOne(newRecipe)
             .then(r => {
