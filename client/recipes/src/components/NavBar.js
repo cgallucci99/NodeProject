@@ -30,6 +30,11 @@ const NavBar = ({ user, authenticated }) => {
                                 <Link className="nav-link" to="/createRecipe">Create Recipe</Link>
                             </span>
                         </li>
+                        <li className="nav-item">
+                            <span data-toggle="collapse" data-target=".navbar-collapse.show">
+                                <Link className="nav-link" to="/userRecipes">{user.name.givenName}'s Recipes</Link>
+                            </span>
+                        </li>
                         </>) : (
                             <span></span>
                         )
