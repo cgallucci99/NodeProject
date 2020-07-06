@@ -1,5 +1,5 @@
 var express = require("express"),
-    // fetch       = require('node-fetch'),
+    fetch = require('node-fetch'),
     bodyParser = require('body-parser'),
     passport = require('passport'),
     session = require('express-session'),
@@ -11,6 +11,7 @@ var express = require("express"),
 require('dotenv').config();
 var app = express();
 app.use(express.static(path.join(__dirname, '/build')));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -164,7 +165,25 @@ app.post('/api/createRecipe', isAuthenticated, function (req, res) {
         img = req.file.path;
     });
     const client = new MongoClient(uri, { useNewUrlParser: true });
-    client.connect(err => {
+    client.connect(async err => {
+        var ingredients = [];
+        var formBody = `ingredientList=${encodeURIComponent(req.body.ingredients)}&servings=${encodeURIComponent(req.body.servings)}&includeNutrition=true`;
+        const response = await fetch('https://api.spoonacular.com/recipes/parseIngredients?apiKey=b4eb8132e6de41dbae752d1fd776be77', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formBody,
+        })
+        const body = await response.json();
+        body.forEach((ingredient) => {
+            ingredients.push({
+                "name": ingredient.originalName,
+                "unit": ingredient.unit,
+                "image": `https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}`,
+                "nutrition": ingredient.nutrition
+            })
+        })
         const collection = client.db("recipes").collection("recipes");
         const userID = new mongo.ObjectID(req.user._id);
         var newRecipe = {
@@ -172,7 +191,7 @@ app.post('/api/createRecipe', isAuthenticated, function (req, res) {
             title: req.body.title,
             time: req.body.time,
             servings: req.body.servings,
-            ingredients: req.body.ingredients,
+            ingredients: ingredients,
             instructions: req.body.instructions,
             image: img
         }
@@ -194,14 +213,14 @@ app.post('/api/createRecipe', isAuthenticated, function (req, res) {
     });
 });
 
-app.get('/api/getUserRecipes', isAuthenticated, function(req, res) {
+app.get('/api/getUserRecipes', isAuthenticated, function (req, res) {
     const client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
         const collection = client.db("recipes").collection("recipes");
         const userID = new mongo.ObjectID(req.user._id);
-        collection.find({userID: userID}).toArray(function(e, result) {
+        collection.find({ userID: userID }).toArray(function (e, result) {
             if (e) {
-                return res.json({message: 'fail'});
+                return res.json({ message: 'fail' });
             }
             res.json(result);
             client.close();

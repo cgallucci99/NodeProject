@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Loader from 'react-loader-spinner'
+import { Link } from 'react-router-dom';
 
 const UserRecipesPage = ({ url, user, authenticated }) => {
     const [recipes, setRecipes] = useState([]);
@@ -14,22 +15,22 @@ const UserRecipesPage = ({ url, user, authenticated }) => {
                 "Access-Control-Allow-Credentials": true
             }
         })
-        .then(results => results.json())
-        .then(body => {
-            if (body.message === 'fail') {
-                console.log('failed to add')
-            } else {
-                setRecipes(body);
-                setLoading(false);
-            }
-        })
+            .then(results => results.json())
+            .then(body => {
+                if (body.message === 'fail') {
+                    console.log('failed to add')
+                } else {
+                    setRecipes(body);
+                    setLoading(false);
+                }
+            })
     }
     useEffect(() => {
         setLoading(true);
         getUserRecipes();
     }, [user])
     if (!authenticated) {
-        return ( 
+        return (
             <h1>Please log in</h1>
         )
     } else {
@@ -37,11 +38,19 @@ const UserRecipesPage = ({ url, user, authenticated }) => {
             <div className="container">
                 <h2>Your Recipes:</h2>
                 {loading ? (
-                <div className='d-flex justify-content-center'>
-                    <Loader type='TailSpin' color='#000000' height={100} width={100} />
-                </div>) : (
-                    <p>{recipes[0].title}</p>
-                )}
+                    <div className='d-flex justify-content-center'>
+                        <Loader type='TailSpin' color='#000000' height={100} width={100} />
+                    </div>) : (
+                        <ul className="list-group">
+                            {
+                                recipes.map((recipe, key) => (
+                                    <li key={key} className="list-group-item">
+                                        <Link to="/userRecipe" user={user} authenticated={authenticated} recipe={recipe} >{recipe.title}</Link>
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                    )}
 
             </div>
         )
