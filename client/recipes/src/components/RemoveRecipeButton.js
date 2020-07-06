@@ -29,8 +29,8 @@ const RemoveRecipeButton = ({ url, id, setUserRecipes }) => {
 
     return (
         <>
-            {removed ? (<button className='float-right mr-2 btn btn-secondary btn-sm' disabled>&nbsp;&#10003;&nbsp;</button>) :
-                (<button className='float-right mr-2 btn btn-danger btn-sm' onClick={removeFromProfile}>&nbsp;-&nbsp;</button>
+            {removed ? (<button className='float-right btn btn-secondary btn-sm' disabled>&nbsp;&#10003;&nbsp;</button>) :
+                (<button className='float-right btn btn-danger btn-sm' onClick={removeFromProfile}>&nbsp;-&nbsp;</button>
                 )}
         </>
     );

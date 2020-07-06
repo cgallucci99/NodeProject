@@ -12,6 +12,7 @@ import NavBar from './components/NavBar';
 import LogoutPage from './pages/LogoutPage';
 import Footer from './components/Footer';
 import CreateRecipePage from './pages/CreateRecipePage';
+import UserRecipesPage from './pages/UserRecipesPage';
 
 function App() {
   const [userId, setUserId] = useState('');
@@ -67,6 +68,9 @@ function App() {
         )} />
         <Route path="/createRecipe" render={(props) => (
           <CreateRecipePage {...props} url={url} user={{ name: username, id: userId, recipes: userRecipes }} authenticated={authenticated} />
+        )} />
+        <Route path="/userRecipes" render={(props) => (
+          <UserRecipesPage {...props} url={url} user={{ name: username, id: userId, recipes: userRecipes }} authenticated={authenticated} />
         )} />
       </Switch>
       <Footer />

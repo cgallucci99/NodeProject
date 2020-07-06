@@ -38,7 +38,7 @@ const CreateRecipePage = ({ url, user, authenticated }) => {
 
         return (
             <div className="container mt-5">
-                <form method="POST" action={url + "/api/createRecipe"}>
+                <form method="POST" action={url + "/api/createRecipe"} encType="multipart/form-data">
                     <div className="form-group row">
                         <div className="col-md-1 col-form-label">
                             <label htmlFor="title">Title</label>
