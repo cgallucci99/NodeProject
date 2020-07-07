@@ -237,7 +237,7 @@ app.post('/api/createRecipe', isAuthenticated, multer({storage: multer.memorySto
             instructions: req.body.instructions,
             image: imgurBody.data.link,
             nutrition: parseNutrition(body, req.body.servings),
-            id: req.body.title.substring(0,5) + Date.now().toString(),
+            id: req.body.title.split(" ").join("").substring(0,5) + Date.now().toString(),
             summary: req.body.summary
         }
         collection.insertOne(newRecipe)
